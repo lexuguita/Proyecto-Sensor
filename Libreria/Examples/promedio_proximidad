@@ -1,0 +1,38 @@
+#include <Sensor_Lidar.h>
+
+Sensor_Lidar miSensor;
+
+void setup() {
+  Serial.begin(9600);
+
+  if (!miSensor.begin()) {
+    Serial.println("Fallo al iniciar el sensor LIDAR");
+    while (1); // Detiene el programa si hay error
+  }
+
+  Serial.println("Sensor LIDAR listo");
+}
+
+void loop() {
+  // Leer y mostrar una medida
+  int distancia = miSensor.readDistance();
+  Serial.print("Distancia: ");
+  Serial.print(distancia);
+  Serial.println(" mm");
+
+  // Mostrar en LCD
+  miSensor.displayDistance();
+
+  // Evaluar si está muy cerca
+  if (miSensor.closeDistance()) {
+    Serial.println("¡Objeto demasiado cerca!");
+  }
+
+  // Obtener promedio de 5 lecturas y mostrarlo en pantalla
+  int promedio = miSensor.getPromedio(5);
+  Serial.print("Promedio (5): ");
+  Serial.print(promedio);
+  Serial.println(" mm");
+
+  delay(1500); // Tiempo entre actualizaciones
+}
